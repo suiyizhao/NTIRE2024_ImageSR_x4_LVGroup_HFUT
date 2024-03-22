@@ -31,10 +31,19 @@ def select_model(args, device):
         # model.load_state_dict(torch.load(model_path), strict=True)
 
         # DAT baseline, ICCV 2023
-        from models.team00_DAT import DAT
+        from models.team00_DAT import NAFNet
         name, data_range = f"{model_id:02}_DAT_baseline", 1.0
         model_path = os.path.join('model_zoo', 'team00_dat.pth')
         model = DAT()
+        model.load_state_dict(torch.load(model_path), strict=True)
+
+    elif model_id ==18:
+        from models.team18_Light-NAFNet.py import NAFNetLocal
+        name, data_range = f"{model_id:02}_Light-NAFNet_baseline", 1.0
+        model_path = os.path.join('model_zoo', 'team18_Light-NAFNet.pth')
+        model = NAFNetLocal(img_channel=3, width=64, middle_blk_num=31,
+                        enc_blk_nums=[1, 1, 1], dec_blk_nums=[1, 1],
+                        train_size=(1, 3, 48, 48)).cuda()
         model.load_state_dict(torch.load(model_path), strict=True)
     else:
         raise NotImplementedError(f"Model {model_id} is not implemented.")
